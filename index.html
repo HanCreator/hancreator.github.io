@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 홈페이지 | HanHanCreator</title>
+    <style>
+        /* 🎨 글로벌 스타일 & 전체 화면 레이아웃 (맥북 다크모드 감성) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* 🖥️ 맥북 사파리 브라우저 프레임 전체 컨테이너 */
+        .browser-container {
+            width: 100%;
+            max-width: 1200:// ;
+            height: 100%;
+            background-color: #212125; /* 피피티 특유의 어두운 배경색 */
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2d2d34;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 윈도우 상단 타이틀 바 (신호등 버튼 + 주소창) */
+        .title-bar {
+            height: 48px;
+            background-color: #2a2a2e;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid #1a1a1e;
+            position: relative;
+        }
+
+        /* 🔴 🟡 🟢 맥북 3색 신호등 버튼 */
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+            position: absolute;
+            left: 16px;
+        }
+        .light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .close { background-color: #ff5f56; }
+        .minimize { background-color: #ffbd2e; }
+        .maximize { background-color: #27c93f; }
+
+        /* 🔍 중앙 가짜 브라우저 주소창 */
+        .address-bar {
+            width: 40%;
+            height: 28px;
+            background-color: #1e1e22;
+            border-radius: 6px;
+            margin: 0 auto;
+            border: 1px solid #3a3a42;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 12px;
+            cursor: default;
+        }
+
+        /* 📦 하단 메인 윈도우 바디 (왼쪽 사이드바 + 중앙 본문) */
+        .window-body {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        /* 📁 1번 포인트: 왼쪽 세로 사이드바 (DOCK) */
+        .side-bar {
+            width: 54px;
+            background-color: #1a1a1d;
+            border-right: 1px solid #2a2a30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            justify-content: space-between;
+        }
+
+        .side-menu-top {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 사이드바 아이콘 가상 구현 (피피티 느낌) */
+        .side-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background-color: #333339;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #aaa;
+        }
+        .side-icon:hover {
+            background-color: #44444c;
+            color: #fff;
+        }
+
+        /* 🎯 중앙 본문 및 드롭다운 메뉴 탑재 영역 */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            position: relative;
+        }
+
+        /* 상단 네비게이션용 수평 배치 */
+        .top-nav {
+            display: flex;
+            justify-content: flex-start;
+            gap: 24px;
+            list-style: none;
+            margin-bottom: 60px;
+        }
+
+        /* 🐭 2번 포인트: 커서를 여기에다 대면 메뉴들이 뜬다! (드롭다운) */
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-trigger {
+            background: none;
+            border: none;
+            color: #a0a0aa;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .menu-item:hover .menu-trigger {
+            color: #ffffff;
+            background-color: #2d2d34;
+        }
+
+        /* 부드럽게 슥 내려오는 드롭다운 메뉴 상자 */
+        .dropdown-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #2a2a32;
+            border: 1px solid #3a3a44;
+            border-radius: 8px;
+            min-width: 160px;
+            padding: 6px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            list-style: none;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        /* 마우스를 올렸을 때 액션 🪄 */
+        .menu-item:hover .dropdown-box {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(4px);
+        }
+
+        .dropdown-box li button, .dropdown-box li a {
+            display: block;
+            width: 100%;
+            padding: 10px 16px;
+            color: #e0e0e6;
+            text-align: left;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .dropdown-box li button:hover, .dropdown-box li a:hover {
+            background-color: #3e3e4a;
+            color: #ffffff;
+        }
+
+        /* 📝 3번 포인트: 중앙 텍스트 영역 (Simple is Perfect.) */
+        .center-text-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: -60px; /* 살짝 위로 밸런스 조정 */
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+
+        .sub-title {
+            font-size: 18px;
+            color: #86868b;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🖥️ 사파리 브라우저 프레임 외형 -->
+    <div class="browser-container">
+        <!-- 윈도우 상단 헤더 -->
+        <div class="title-bar">
+            <div class="traffic-lights">
+                <span class="light close"></span>
+                <span class="light minimize"></span>
+                <span class="light maximize"></span>
+            </div>
+            <div class="address-bar">hanhancreator.github.io</div>
+        </div>
+
+        <!-- 내부 바디 레이아웃 -->
+        <div class="window-body">
+            
+            <!-- 📁 왼쪽 세로 사이드바 DOCK (기획서 반영) -->
+            <aside class="side-bar">
+                <div class="side-menu-top">
+                    <div class="side-icon" id="side-home">🏠</div>
+                    <div class="side-icon">⚙️</div>
+                    <div class="side-icon">🍏</div>
+                </div>
+                <div class="side-icon">👤</div>
+            </aside>
+
+            <!-- 🎯 우측 콘텐츠 메인 보드 -->
+            <div class="content-area">
+                
+                <!-- 상단 네비게이션 메뉴 (마우스 호버 감지) -->
+                <ul class="top-nav">
+                    <!-- ① 언어 서브 메뉴 -->
+                    <li class="menu-item">
+                        <button class="menu-trigger" id="btn-lang">언어 ▾</button>
+                        <ul class="dropdown-box">
+                            <li><button onclick="changeLang('en')">영어 (English)</button></li>
+                            <li><button onclick="changeLang('ja')">일본어 (日本語)</button></li>
+                            <li><button onclick="changeLang('ko')">한국어 (Korean)</button></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- ② GitHub 서브 메뉴 -->
+                    <li class="menu-item">
+                        <button class="menu-trigger">GitHub ▾</button>
+                        <ul class="dropdown-box">
+                            <li><a href="https://github.com" target="_blank">저장소 이동</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- ③ 다운로드 서브 메뉴 -->
+                    <li class="menu-item">
+                        <button class="menu-trigger" id="btn-download">다운로드 ▾</button>
+                        <ul class="dropdown-box">
+                            <li><a href="#">한코딩스타트</a></li>
+                            <li><a href="#">한폰트크리에이터</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- 텍스트 정중앙 배치 -->
+                <div class="center-text-group">
+                    <h1 class="main-title" id="text-main">Simple is Perfect.</h1>
+                    <p class="sub-title" id="text-sub">이동…</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌐 실시간 다국어 처리 스크립트 코드 -->
+    <script>
+        const translations = {
+            ko: {
+                lang: "언어 ▾",
+                download: "다운로드 ▾",
+                main: "Simple is Perfect.",
+                sub: "이동…"
+            },
+            en: {
+                lang: "Language ▾",
+                download: "Download ▾",
+                main: "Simple is Perfect.",
+                sub: "Moving..."
+            },
+            ja: {
+                lang: "言語 ▾",
+                download: "ダウンロード ▾",
+                main: "Simple is Perfect.",
+                sub: "移動中…"
+            }
+        };
+
+        function changeLang(lang) {
+            document.documentElement.lang = lang;
+            
+            // 데이터 맵 매칭 후 변경
