@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 홈페이지 | HanHanCreator</title>
+    <style>
+        /* 🎨 기본 스타일 및 다크모드 배경 배경 세팅 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1e1e24; /* 슬라이드 특유의 딥 다크그레이 색상 */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 🌐 네비게이션 상단 바 디자인 */
+        header {
+            background-color: #18181c;
+            border-bottom: 1px solid #2a2a30;
+            padding: 0 24px;
+            height: 54px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        /* 🐭 마우스 커서 올렸을 때 드롭다운 구현 (핵심!) */
+        .menu-item {
+            position: relative;
+            padding: 10px 14px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #b0b0b8;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .menu-item:hover .menu-btn {
+            color: #ffffff;
+        }
+
+        /* 🔽 숨겨진 드롭다운 메뉴 스타일 */
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #25252b;
+            border: 1px solid #33333a;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease-in-out;
+            list-style: none;
+            padding: 6px 0;
+        }
+
+        /* 커서를 대면 메뉴가 뜬다! 🪄 */
+        .menu-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown li a, .dropdown li button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            color: #d0d0d8;
+            text-align: left;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .dropdown li a:hover, .dropdown li button:hover {
+            background-color: #3a3a45;
+            color: #ffffff;
+        }
+
+        /* 📝 메인 콘텐츠 중앙 정렬 영역 */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 54px; /* 헤더 높이만큼 띄우기 */
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .sub-title {
+            font-size: 20px;
+            color: #a0a0aa;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🧭 상단 바 -->
+    <header>
+        <div class="logo-area" id="nav-brand">내 홈페이지 | HanHanCreator</div>
+        
+        <ul class="nav-menu">
+            <!-- 1. 언어 메뉴 -->
+            <li class="menu-item">
+                <button class="menu-btn"><span id="btn-lang">언어</span> ▾</button>
+                <ul class="dropdown">
+                    <li><button onclick="changeLanguage('en')">영어 (English)</button></li>
+                    <li><button onclick="changeLanguage('ja')">일본어 (日本語)</button></li>
+                    <li><button onclick="changeLanguage('ko')">한국어 (Korean)</button></li>
+                </ul>
+            </li>
+            
+            <!-- 2. GitHub 메뉴 -->
+            <li class="menu-item">
+                <button class="menu-btn">GitHub ▾</button>
+                <ul class="dropdown">
+                    <li><a href="https://github.com" target="_blank" id="menu-repo">저장소 바로가기</a></li>
+                </ul>
+            </li>
+            
+            <!-- 3. 다운로드 메뉴 -->
+            <li class="menu-item">
+                <button class="menu-btn"><span id="btn-download">다운로드</span> ▾</button>
+                <ul class="dropdown">
+                    <li><a href="#" id="menu-app1">한코딩스타트</a></li>
+                    <li><a href="#" id="menu-app2">한폰트크리에이터</a></li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+
+    <!-- 🎯 메인 화면 센터 텍스트 -->
+    <main>
+        <h1 class="main-title" id="main-text">Simple is Perfect.</h1>
+        <p class="sub-title" id="sub-text">이동…</p>
+    </main>
+
+    <!-- 🧠 자바스크립트 실시간 다국어 데이터 연동 트릭 -->
+    <script>
+        // 언어별 텍스트 데이터 딕셔너리 세팅
+        const langData = {
+            ko: {
+                brand: "내 홈페이지 | HanHanCreator",
+                langBtn: "언어",
+                downloadBtn: "다운로드",
+                repo: "저장소 바로가기",
+                app1: "한코딩스타트",
+                app2: "한폰트크리에이터",
+                main: "Simple is Perfect.",
+                sub: "이동…"
+            },
+            en: {
+                brand: "My Website | HanHanCreator",
+                langBtn: "Language",
+                downloadBtn: "Download",
+                repo: "Go to Repository",
+                app1: "HanCodingStart",
+                app2: "HanFontCreator",
+                main: "Simple is Perfect.",
+                sub: "Moving..."
+            },
+            ja: {
+                brand: "ホームページ | HanHanCreator",
+                langBtn: "言語",
+                downloadBtn: "ダウンロード",
+                repo: "リポジトリへ 이동",
+                app1: "ハンコーディングスタート",
+                app2: "ハンフォントクリエイター",
+                main: "Simple is Perfect.",
+                sub: "移動中…"
+            }
+        };
+
+        // 언어 전환 기능 함수 🔄
+        function changeLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            // 각 UI 요소의 텍스트를 실시간으로 교체!
+            document.getElementById('nav-brand').innerText = langData[lang].brand;
+            document.getElementById('btn-lang').innerText = langData[lang].langBtn;
+            document.getElementById('btn-download').innerText = langData[lang].downloadBtn;
+            document.getElementById('menu-repo').innerText = langData[lang].repo;
+            document.getElementById('menu-app1').innerText = langData[lang].app1;
+            document.getElementById('menu-app2').innerText = langData[lang].app2;
+            document.getElementById('main-text').innerText = langData[lang].main;
+            document.getElementById('sub-text').innerText = langData[lang].sub;
+            
+            // 선택한 언어 로컬스토리지에 저장해서 새로고침해도 유지되게 세팅
+            localStorage.setItem('selectedLang', lang);
+        }
+
+        // 초기 접속 시 브라우저 언어 감지 또는 기존 설정 로드
+        window.onload = function() {
+            const savedLang = localStorage.getItem('selectedLang');
+            if (savedLang && langData[savedLang]) {
+                changeLanguage(savedLang);
+            } else {
+                const userLang = navigator.language || navigator.userLanguage;
+                const baseLang = userLang.substring(0, 2);
+                if (langData[baseLang]) {
+                    changeLanguage(baseLang);
+                } else {
+                    changeLanguage('ko'); // 기본값은 한국어로 세팅!
+                }
+            }
+        };
+    </script>
+</body>
+</html>
