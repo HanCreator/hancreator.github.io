@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #f5f5f5;
+            background-color: transparent;
             color: #ffffff;
             height: 100vh;
             display: flex;
@@ -27,28 +27,27 @@
         /* 🖥️ 맥북 사파리 브라우저 프레임 전체 컨테이너 */
         .browser-container {
             width: 100%;
-            max-width: 1200:// ;
+            max-width: 1200px;
             height: 100%;
-            background-color: #212125; /* 피피티 특유의 어두운 배경색 */
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            border: 1px solid #2d2d34;
+            background-color: #ffffff; /* 피피티 특유의 어두운 배경색 */
+            color: #000000;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
-
-        /* 윈도우 상단 타이틀 바 (신호등 버튼 + 주소창) */
-        .title-bar {
-            height: 48px;
-            background-color: #2a2a2e;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            border-bottom: 1px solid #1a1a1e;
-            position: relative;
+        
+        @media (prefers-color-scheme: dark) {
+            .browser-container {
+                 /* 💻 다크 모드일 때의 창 색상과 테두리/그림자 */
+                 background-color: #212125;          /* 창 색상: 피피티 어두운 색 */
+                 color: #ffffff;                     /* 글자 색상: 흰색 */
+                 border: 1px solid #2d2d34;          /* 테두리: 어두운 회색 선 */
+                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* 그림자: 진하게 */
+            }
         }
-
         /* 🔴 🟡 🟢 맥북 3색 신호등 버튼 */
         .traffic-lights {
             display: flex;
